@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoffeeController : MonoBehaviour
+public class BonusCoffeeController : MonoBehaviour
 {
     GameObject player; // Hand
 
     HandController handController;
 
-    Vector3 offset; // Offset with hand.
+    GameObject followCoffee;
+
+    float offset; // Distance between coffees.
+
+    bool following = false;
 
     public int coffeeAmount = 0; // For fill with coffee
     List<GameObject> coffeeGrades = new List<GameObject>();
@@ -16,29 +20,48 @@ public class CoffeeController : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         handController = player.GetComponent<HandController>();
-        offset = transform.position - player.transform.position;
-        handController.CoffeeList.Add(gameObject);
-
 
         for (int i = 0; i < transform.childCount; i++)  //Inactive child coffees and get them in a list.
         {
             coffeeGrades.Add(transform.GetChild(i).gameObject);
             coffeeGrades[i].gameObject.SetActive(false);
         }
-        FillCoffee();
-        
     }
 
     
-    void LateUpdate()
+    void Update()
     {
-        FollowPlayer();
+        
     }
 
-    void FollowPlayer()
+    private void OnTriggerEnter(Collider other)
     {
-        transform.position = player.transform.position + offset;
+        if (other.gameObject.CompareTag("Coffee"))
+        {
+            if (!following)
+            {
+                followCoffee = handController.LastCoffee();
+                StartCoroutine(Follow());
+                handController.CoffeeList.Add(gameObject);
+
+                following = true;
+                enabled = false;
+            }
+        }
     }
+
+    IEnumerator Follow()
+    {
+        offset = handController.distanceBetweenCoffees;
+        while (true)
+        {
+            yield return null;
+            float xPos = Mathf.Lerp(transform.position.x, followCoffee.transform.position.x, 5f*Time.deltaTime);
+            float zPos = (followCoffee.transform.position.z + offset);
+            transform.position = new Vector3(xPos, followCoffee.transform.position.y, zPos);
+        }
+    }
+
 
     public void FillCoffee()
     {
