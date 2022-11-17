@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
-    public float boundry; // Screen boundry
-    public float speed;
+
 
     Animator anim;
 
     public List<GameObject> CoffeeList = new List<GameObject>();  // Coffees adds themselves to this list.
 
+    public GameObject firstCoffee; // First coffee in coffees.
     public GameObject lastCoffee; // Last coffee in coffees.
 
     public float distanceBetweenCoffees;
@@ -18,25 +18,18 @@ public class HandController : MonoBehaviour
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        GameManager.StartGame += FindFirstCoffee;
     }
     void Update()
     {
-        Movement();
-        RotateHand();
-        
+        if (GameManager.Instance.isGameStarted)
+        {
+
+            RotateHand();
+        }
     }
 
 
-    void Movement()
-    {
-        transform.position += Vector3.forward * Time.deltaTime * speed;
-
-        // Movement with mouse position ...
-        Vector3 worldPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-
-        float posX = Mathf.Clamp(((worldPosition.x * 8) - 4), -boundry , boundry);
-        transform.position = new Vector3( posX , transform.position.y, transform.position.z);
-    }
 
     void RotateHand()
     {
@@ -52,16 +45,72 @@ public class HandController : MonoBehaviour
         }
     }
 
-    public GameObject LastCoffee() // Sets last coffee in list.
+    private void FindFirstCoffee() // In start
     {
-        float distance = transform.position.z;
-        foreach (GameObject coffee in CoffeeList)
+        GameObject[] coffees = GameObject.FindGameObjectsWithTag("Coffee");
+        if (coffees.Length > 0)
         {
-            if (coffee.transform.position.z > distance)
+            firstCoffee = coffees[0];
+            int coffeeCount = coffees.Length;
+            for (int i = 0; i < coffeeCount; i++)
             {
-                lastCoffee = coffee;
+                if (coffees[i].transform.position.z < firstCoffee.transform.position.z)
+                {
+                    firstCoffee = coffees[i];
+
+                }
             }
+            firstCoffee.GetComponent<CoffeeController>().firstCoffee = true;
+            firstCoffee.GetComponent<CoffeeController>().StarEventsFirstCoffee();
         }
+        else
+        {
+            Debug.LogWarning("There is no coffee in scene !!! Put some coffees");
+        }
+
+    }
+
+    public GameObject FirstCoffee() // Set first coffee in list.
+    {
+        if (CoffeeList.Count > 0)
+        {
+            firstCoffee = CoffeeList[0].gameObject; // Random first coffee
+
+            for (int i = 0; i < CoffeeList.Count; i++) // if any coffee is near to player more than random one it is the first coffee.
+            {
+                CoffeeList[i].GetComponent<CoffeeController>().firstCoffee = false;
+                if (CoffeeList[i].transform.position.z < firstCoffee.transform.position.z)
+                {
+                    firstCoffee = CoffeeList[i];
+                }
+            }
+            firstCoffee.GetComponent<CoffeeController>().firstCoffee = true;
+        }
+        return firstCoffee;
+    }
+    public GameObject LastCoffee() // Set last coffee in list.
+    {
+        if (CoffeeList.Count > 0)
+        {
+            lastCoffee = CoffeeList[0].gameObject; // Random last coffee
+            for (int i = 0; i < CoffeeList.Count; i++) // if any coffee is fat to player more than random one it is the last coffee.
+            {
+                CoffeeList[i].GetComponent<CoffeeController>().lastCoffee = false;
+                if (CoffeeList[i].transform.position.z > lastCoffee.transform.position.z)
+                {
+                    lastCoffee = CoffeeList[i];
+
+                }
+            }
+            lastCoffee.GetComponent<CoffeeController>().lastCoffee = true;
+        }
+
         return lastCoffee;
     }
+
+    private void OnDisable()
+    {
+        GameManager.StartGame -= FindFirstCoffee;
+    }
+
 }

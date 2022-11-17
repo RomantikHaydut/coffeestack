@@ -8,36 +8,88 @@ public class CoffeeController : MonoBehaviour
 
     HandController handController;
 
-    Vector3 offset; // Offset with hand.
+    GameObject followCoffee;
+
+    GameObject firstCoffeePos;
 
     public int coffeeAmount = 0; // For fill with coffee
     List<GameObject> coffeeGrades = new List<GameObject>();
-    void Start()
+
+    float offset; // Distance between coffees.
+
+    public bool following = false;
+
+    public bool firstCoffee;
+    public bool lastCoffee;
+
+    private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         handController = player.GetComponent<HandController>();
-        offset = transform.position - player.transform.position;
+        firstCoffeePos = GameObject.FindGameObjectWithTag("FirstCoffeePos");
+    }
+    void Start()
+    {
+        SetCoffeeGrades();
+        FillCoffee();
+    }
+
+    public void StarEventsFirstCoffee()
+    {
         handController.CoffeeList.Add(gameObject);
+    }
 
+    
+    void Update()
+    {
+        if (firstCoffee)
+        {
+            FollowPlayer();
+        }
+    }
 
+    public void SetLastCoffee()
+    {
+        handController.lastCoffee = gameObject;
+    }
+    public void SetFirstCoffee()
+    {
+        handController.firstCoffee = gameObject;
+    }
+
+    void FollowPlayer() // For first coffee
+    {
+        transform.position = firstCoffeePos.transform.position;
+    }
+
+    IEnumerator Follow() // For other coffees.
+    {
+        offset = handController.distanceBetweenCoffees;
+        while (true)
+        {
+            yield return new WaitForEndOfFrame();
+            if (!following)
+            {
+                yield break;
+            }
+            float xPos = Mathf.Lerp(transform.position.x, followCoffee.transform.position.x, 5f * Time.deltaTime);
+            float zPos = (followCoffee.transform.position.z + offset);
+            transform.position = new Vector3(xPos, followCoffee.transform.position.y, zPos);
+        }
+    }
+
+    public void StopFollow() // For other coffees.
+    {
+        following = false;
+    }
+
+    public void SetCoffeeGrades()
+    {
         for (int i = 0; i < transform.childCount; i++)  //Inactive child coffees and get them in a list.
         {
             coffeeGrades.Add(transform.GetChild(i).gameObject);
             coffeeGrades[i].gameObject.SetActive(false);
         }
-        FillCoffee();
-        
-    }
-
-    
-    void LateUpdate()
-    {
-        FollowPlayer();
-    }
-
-    void FollowPlayer()
-    {
-        transform.position = player.transform.position + offset;
     }
 
     public void FillCoffee()
@@ -55,5 +107,35 @@ public class CoffeeController : MonoBehaviour
             coffeeGrades[2].gameObject.SetActive(true);
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (GameManager.Instance.isGameStarted)
+        {
+            if (!firstCoffee)
+            {
+                if (other.gameObject.CompareTag("Coffee") || other.gameObject.CompareTag("Player"))
+                {
+                    if (!following)
+                    {
+                        followCoffee = handController.LastCoffee();
+                        StartCoroutine(Follow());
+                        handController.CoffeeList.Add(gameObject);
+                        handController.lastCoffee = gameObject;
+                        following = true;
+                    }
+                }
+            }
+            else
+            {
+                if (other.gameObject.CompareTag("Player"))
+                {
+                    lastCoffee = true;
+                    handController.lastCoffee = gameObject;
+                }
+            }
+        }
+        
     }
 }

@@ -178,8 +178,8 @@ GameObject:
   - component: {fileID: 7799913437606995677}
   - component: {fileID: 7787889171647318271}
   - component: {fileID: 4859554198953717744}
-  - component: {fileID: 4859554198953717743}
   - component: {fileID: 4461951515276148854}
+  - component: {fileID: 3415058087105701651}
   m_Layer: 0
   m_Name: Espresso_Bonus
   m_TagString: Coffee
@@ -268,19 +268,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.09296541, y: 0.09309812, z: 0.09153657}
   m_Center: {x: 8.2687734e-17, y: 0.04654906, z: 0}
---- !u!114 &4859554198953717743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7800840790672885741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49afb77da81258a448b7bb2a527a8310, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coffeeAmount: 0
 --- !u!54 &4461951515276148854
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -297,6 +284,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3415058087105701651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7800840790672885741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de5dae9d19788f4d9ad160886e9747c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coffeeAmount: 0
+  following: 0
+  firstCoffee: 0
+  lastCoffee: 0
 --- !u!1 &7800920138659537119
 GameObject:
   m_ObjectHideFlags: 0

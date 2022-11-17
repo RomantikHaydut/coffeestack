@@ -4,27 +4,15 @@ using UnityEngine;
 
 public class CoffeeFallController : MonoBehaviour
 {
-    
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Coffee"))
         {
-            BonusCoffeeController bonusCoffeeController = other.gameObject.GetComponent<BonusCoffeeController>();
-            if (bonusCoffeeController != null)
+            CoffeeController coffeeController = other.gameObject.GetComponent<CoffeeController>();
+            if (coffeeController != null)
             {
-                bonusCoffeeController.coffeeAmount = 1;
-                bonusCoffeeController.FillCoffee();
+                coffeeController.coffeeAmount = 1;
+                coffeeController.FillCoffee();
             }
         }
     }

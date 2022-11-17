@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-
     public float speed;
-
     void Update()
     {
         Movement();
@@ -14,6 +12,10 @@ public class CameraController : MonoBehaviour
 
     void Movement()
     {
-        transform.position += Vector3.forward * Time.deltaTime * speed;
+        if (GameManager.Instance.isGameStarted)
+        {
+            transform.position += Vector3.forward * Time.deltaTime * speed;
+        }
+
     }
 }

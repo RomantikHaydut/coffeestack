@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Coffee
   - CoffeeFall
+  - FirstCoffeePos
   layers:
   - Default
   - TransparentFX
