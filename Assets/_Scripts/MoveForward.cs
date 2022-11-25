@@ -7,7 +7,7 @@ public class MoveForward : MonoBehaviour
     public float speed;
 
     [SerializeField] GameObject ground;
-    private float boundry; // Grounds boundries.
+    [HideInInspector]public float boundry; // Grounds boundries.
     [SerializeField] float boundryOffset;
     private float sensitive; // Distance from camera.
     [SerializeField] [Range(1, 4)] float sensitiveMultiplier;

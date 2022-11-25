@@ -5,7 +5,18 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public float speed;
-    void Update()
+
+    Transform target;
+
+    Vector3 offset;
+
+    private void Awake()
+    {
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        offset = target.position-transform.position;
+    }
+    void LateUpdate()
     {
         Movement();
     }
@@ -14,8 +25,7 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.isGameStarted)
         {
-            transform.position += Vector3.forward * Time.deltaTime * speed;
+            transform.position = new Vector3(transform.position.x, transform.position.y, target.position.z - offset.z);
         }
-
     }
 }

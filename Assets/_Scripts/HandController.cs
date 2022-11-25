@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
-
-
     Animator anim;
 
     public List<GameObject> CoffeeList = new List<GameObject>();  // Coffees adds themselves to this list.
@@ -24,8 +22,12 @@ public class HandController : MonoBehaviour
     {
         if (GameManager.Instance.isGameStarted)
         {
-
             RotateHand();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            LevelFinishEvents();
         }
     }
 
@@ -70,7 +72,7 @@ public class HandController : MonoBehaviour
 
     }
 
-    public GameObject FirstCoffee() // Set first coffee in list.
+    public void FirstCoffee() // Set first coffee in list.
     {
         if (CoffeeList.Count > 0)
         {
@@ -86,9 +88,8 @@ public class HandController : MonoBehaviour
             }
             firstCoffee.GetComponent<CoffeeController>().firstCoffee = true;
         }
-        return firstCoffee;
     }
-    public GameObject LastCoffee() // Set last coffee in list.
+    public void LastCoffee() // Set last coffee in list.
     {
         if (CoffeeList.Count > 0)
         {
@@ -105,7 +106,20 @@ public class HandController : MonoBehaviour
             lastCoffee.GetComponent<CoffeeController>().lastCoffee = true;
         }
 
-        return lastCoffee;
+    }
+
+    public void LevelFinishEvents()
+    {
+        for (int i = 0; i < CoffeeList.Count; i++)
+        {
+            CoffeeController coffee = CoffeeList[i].GetComponent<CoffeeController>();
+            if (coffee != null)
+            {
+                coffee.CalculateScore();
+            }
+        }
+
+        print("Total Score : "+ FindObjectOfType<ScoreManager>().score);
     }
 
     private void OnDisable()
