@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static event Action StartGame;
 
     public bool isGameStarted;
+
     private void Awake()
     {
         isGameStarted = false;

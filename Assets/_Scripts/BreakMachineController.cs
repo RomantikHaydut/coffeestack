@@ -6,20 +6,45 @@ public class BreakMachineController : MonoBehaviour
 {
     [SerializeField] float xForce;
 
-    private void Update() // Delete here.
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            BreakCoffees();
-        }
-    }
+    [SerializeField] GameObject trambolinePrefab;
+
+    private bool collided = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Coffee"))
+        if (!collided)
         {
-            BreakCoffees();
-            Destroy(gameObject);
+            if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Coffee"))
+            {
+                StartCoroutine(JumpCoffees());
+                collided = true;
+            }
         }
+    }
+
+    IEnumerator JumpCoffees()
+    {
+        HandController hand = FindObjectOfType<HandController>();
+        int coffeeAmount;
+        if (hand != null)
+        {
+            coffeeAmount = hand.CoffeeList.Count;
+
+            for (int i = 0; i < coffeeAmount; i++)
+            {
+                GameObject trambolineClone = Instantiate(trambolinePrefab, hand.CoffeeList[i].transform.position, Quaternion.identity);
+                TrambolineController trambolineController = trambolineClone.GetComponent<TrambolineController>();
+                if (trambolineController != null)
+                {
+                    trambolineController.target = hand.CoffeeList[i].gameObject;
+                }
+                Destroy(trambolineClone, 0.3f);
+            }
+
+            BreakCoffees();
+        }
+
+        yield break;
         
     }
 

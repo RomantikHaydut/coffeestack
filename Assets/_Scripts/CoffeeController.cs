@@ -8,18 +8,20 @@ public class CoffeeController : MonoBehaviour
 
     HandController handController;
 
-    GameObject followCoffee;
+    public GameObject followCoffee;
 
     GameObject firstCoffeePos;
 
     // For fill with coffee
-    public int coffeeAmount = 0; 
+    public int coffeeAmount = 0;
     List<GameObject> coffeeGrades = new List<GameObject>();
     List<GameObject> coffeeHeats = new List<GameObject>();
+    List<GameObject> coffeeCremas = new List<GameObject>();
     public bool triggerWithCoffeeMachine = false;
     public float distanceTakenWithCoffeeMachine;
     private float triggerStartPoint;
     private bool isCoffeeHeat;
+    public bool isCoffeeCreamed = false;
 
     float offset; // Distance between coffees.
 
@@ -39,13 +41,12 @@ public class CoffeeController : MonoBehaviour
         firstCoffeePos = GameObject.FindGameObjectWithTag("FirstCoffeePos");
 
         onGround = true;
-
-        print("Coffe Scale : " + transform.localScale.z);
     }
     void Start()
     {
         SetCoffeeGrades();
         FillCoffee();
+        IgnoreCollisionWithOtherCoffees();
     }
 
     public void StarEventsFirstCoffee()
@@ -53,21 +54,9 @@ public class CoffeeController : MonoBehaviour
         handController.CoffeeList.Add(gameObject);
     }
 
-    
-    void LateUpdate()
-    {
-        if (onGround)
-        {
-            if (firstCoffee)
-            {
-                FollowPlayer();
-            }
-            else
-            {
-                FollowPreviousCoffee();
-            }
-        }
 
+    void Update()
+    {
         CheckBoundry();
     }
 
@@ -101,12 +90,12 @@ public class CoffeeController : MonoBehaviour
         handController.firstCoffee = gameObject;
     }
 
-    void FollowPlayer() // For first coffee
+    public void FollowPlayer() // For first coffee
     {
         transform.position = firstCoffeePos.transform.position;
     }
 
-    void FollowPreviousCoffee()
+    public void FollowPreviousCoffee()
     {
         if (following)
         {
@@ -115,7 +104,7 @@ public class CoffeeController : MonoBehaviour
             float zPos = (followCoffee.transform.position.z + offset);
             transform.position = new Vector3(xPos, followCoffee.transform.position.y, zPos);
         }
-        
+
     }
 
 
@@ -134,9 +123,14 @@ public class CoffeeController : MonoBehaviour
                 coffeeHeats.Add(child);
                 child.SetActive(false);
             }
-            else
+            else if (child.tag == "CoffeeGrade")
             {
                 coffeeGrades.Add(child);
+                child.gameObject.SetActive(false);
+            }
+            else if (child.tag == "Crema")
+            {
+                coffeeCremas.Add(child);
                 child.gameObject.SetActive(false);
             }
         }
@@ -146,15 +140,37 @@ public class CoffeeController : MonoBehaviour
     {
         if (coffeeAmount == 1)
         {
-            coffeeGrades[0].gameObject.SetActive(true);
+            if (!coffeeGrades[1].gameObject.activeInHierarchy && !coffeeGrades[2].gameObject.activeInHierarchy)
+            {
+                coffeeGrades[0].gameObject.SetActive(true);
+            }
         }
         else if (coffeeAmount == 2)
         {
-            coffeeGrades[1].gameObject.SetActive(true);
+            if (!coffeeGrades[2].gameObject.activeInHierarchy)
+            {
+                coffeeGrades[1].gameObject.SetActive(true);
+            }
+
+            if (coffeeGrades[0].gameObject.activeInHierarchy)
+            {
+                coffeeGrades[0].gameObject.SetActive(false);
+            }
         }
         else if (coffeeAmount == 3)
         {
             coffeeGrades[2].gameObject.SetActive(true);
+            if (coffeeGrades[0].gameObject.activeInHierarchy)
+            {
+                coffeeGrades[0].gameObject.SetActive(false);
+            }
+
+            if (coffeeGrades[1].gameObject.activeInHierarchy)
+            {
+                coffeeGrades[1].gameObject.SetActive(false);
+            }
+
+
         }
 
     }
@@ -176,6 +192,27 @@ public class CoffeeController : MonoBehaviour
             coffeeHeats[2].gameObject.SetActive(true);
             isCoffeeHeat = true;
         }
+    }
+
+    public void MakeCream()
+    {
+        if (coffeeAmount == 1)
+        {
+            coffeeCremas[0].gameObject.SetActive(true);
+            isCoffeeCreamed = true;
+        }
+        else if (coffeeAmount == 2)
+        {
+            coffeeCremas[1].gameObject.SetActive(true);
+            isCoffeeCreamed = true;
+        }
+        else if (coffeeAmount == 3)
+        {
+            coffeeCremas[2].gameObject.SetActive(true);
+            isCoffeeCreamed = true;
+        }
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -203,7 +240,7 @@ public class CoffeeController : MonoBehaviour
                                 }
                             }
                         }
-                        else if (other.gameObject.CompareTag("Player"))
+                        else if (other.gameObject.CompareTag("Player") && transform.tag == "Coffee")
                         {
                             if (!following)
                             {
@@ -217,16 +254,117 @@ public class CoffeeController : MonoBehaviour
                     }
                     else
                     {
-                        if (other.gameObject.CompareTag("Player"))
+                        if (other.gameObject.CompareTag("Player") && transform.tag == "Coffee")
                         {
                             firstCoffee = true;
                             handController.firstCoffee = gameObject;
                             handController.CoffeeList.Add(gameObject);
                             handController.FirstCoffee();
                         }
-                        
+
                     }
-                    
+
+                    // Freehand
+                    if (other.gameObject.CompareTag("FreeHand"))
+                    {
+                        if (following)
+                        {
+                            print("AAAAA");
+                            FreeHandController freeHandController = other.gameObject.transform.GetComponentInParent(typeof(FreeHandController)) as FreeHandController;
+                            if (!freeHandController.takedCoffee)
+                            {
+                                freeHandController.targetCoffee = gameObject;
+                                StartCoroutine(freeHandController.MoveCoffeeToHoldPosition());
+                                transform.tag = "TakenCoffee";
+                                freeHandController.takedCoffee = true;
+                                RemoveFromCoffeeList();
+                                if (firstCoffee)
+                                {
+                                    firstCoffee = false;
+
+                                }
+                                enabled = false;
+                            }
+
+                        }
+                    }
+
+                    // Custamor hand
+                    if (other.gameObject.CompareTag("CustamorHand"))
+                    {
+                        if (following)
+                        {
+                            CustamorHandController custamorHandController = other.gameObject.transform.GetComponentInParent(typeof(CustamorHandController)) as CustamorHandController;
+                            if (!custamorHandController.takedCoffee)
+                            {
+                                custamorHandController.targetCoffee = gameObject;
+                                StartCoroutine(custamorHandController.MoveCoffeeToHoldPosition());
+                                transform.tag = "TakenCoffee";
+                                custamorHandController.takedCoffee = true;
+                                RemoveFromCoffeeList();
+                                if (firstCoffee)
+                                {
+                                    firstCoffee = false;
+                                }
+                                enabled = false;
+                            }
+
+                        }
+                    }
+
+                    if (other.gameObject.CompareTag("Finish"))
+                    {
+                        if (lastCoffee)
+                        {
+                            handController.LevelFinish();
+                        }
+                    }
+
+                }
+                else // Here if coffee is first coffeee.
+                {
+                    // Freehand
+                    if (other.gameObject.CompareTag("FreeHand"))
+                    {
+
+                        print("AAAAA");
+                        FreeHandController freeHandController = other.gameObject.transform.GetComponentInParent(typeof(FreeHandController)) as FreeHandController;
+                        if (!freeHandController.takedCoffee)
+                        {
+                            freeHandController.targetCoffee = gameObject;
+                            StartCoroutine(freeHandController.MoveCoffeeToHoldPosition());
+                            transform.tag = "TakenCoffee";
+                            freeHandController.takedCoffee = true;
+                            RemoveFromCoffeeList();
+                            if (firstCoffee)
+                            {
+                                firstCoffee = false;
+
+                            }
+                            enabled = false;
+                        }
+
+                    }
+
+                    // Custamor hand it means custamor takes last coffee.
+                    if (other.gameObject.CompareTag("CustamorHand"))
+                    {
+                        CustamorHandController custamorHandController = other.gameObject.transform.GetComponentInParent(typeof(CustamorHandController)) as CustamorHandController;
+                        if (!custamorHandController.takedCoffee)
+                        {
+                            custamorHandController.targetCoffee = gameObject;
+                            StartCoroutine(custamorHandController.MoveCoffeeToHoldPosition());
+                            transform.tag = "TakenCoffee";
+                            custamorHandController.takedCoffee = true;
+                            RemoveFromCoffeeList();
+                            if (firstCoffee)
+                            {
+                                firstCoffee = false;
+                                custamorHandController.lastCoffee = true;
+                            }
+                            enabled = false;
+                        }
+                    }
                 }
 
             }
@@ -241,6 +379,74 @@ public class CoffeeController : MonoBehaviour
             }
         }
 
+    }
+
+    private void RemoveFromCoffeeList()
+    {
+        // Here we find this coffees index.
+        print("Hands list count : " + handController.CoffeeList.Count);
+        int index = 0;
+        if (handController.CoffeeList.Count > 1)
+        {
+            for (int i = 0; i < handController.CoffeeList.Count; i++)
+            {
+                if (handController.CoffeeList[i].gameObject == gameObject)
+                {
+                    index = i;
+                }
+            }
+            // Here we find the this coffee's follower coffee;
+            List<GameObject> ActiveFollowCoffees = new List<GameObject>();
+
+            GameObject myFollower = handController.CoffeeList[0];
+            foreach (GameObject Coffee in handController.CoffeeList)
+            {
+                CoffeeController coffeeController = Coffee.GetComponent<CoffeeController>();
+                if (coffeeController.followCoffee == gameObject)
+                {
+                    myFollower = coffeeController.gameObject;
+                }
+
+            }
+            if (myFollower != null)
+            {
+                if (!firstCoffee)
+                {
+                    myFollower.GetComponent<CoffeeController>().followCoffee = handController.CoffeeList[index - 1].gameObject;
+                }
+                else
+                {
+                    myFollower.GetComponent<CoffeeController>().followCoffee = null;
+                    myFollower.GetComponent<CoffeeController>().firstCoffee = true;
+                }
+                
+            }
+
+            for (int i = handController.CoffeeList.IndexOf(myFollower) + 1; i < handController.CoffeeList.Count; i++)
+            {
+                handController.CoffeeList[i].gameObject.GetComponent<CoffeeController>().followCoffee = handController.CoffeeList[i - 1].gameObject;
+            }
+
+            handController.CoffeeList.Remove(gameObject);
+
+        }
+        else
+        {
+            handController.CoffeeList.Remove(gameObject);
+
+        }
+
+        if (handController.firstCoffee == gameObject)
+        {
+            handController.firstCoffee = null;
+            handController.FirstCoffee();
+        }
+
+        if (handController.lastCoffee == gameObject)
+        {
+            handController.lastCoffee = null;
+            handController.LastCoffee();
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -264,10 +470,10 @@ public class CoffeeController : MonoBehaviour
             transform.position = new Vector3(transform.position.x, 0, transform.position.z);
             onGround = true;
         }
-        
+
     }
 
-    void CheckBoundry() // If we exit from road...
+    public void CheckBoundry() // If we exit from road...
     {
         boundry = FindObjectOfType<MoveForward>().boundry;
         if (transform.position.x > boundry)
@@ -290,9 +496,24 @@ public class CoffeeController : MonoBehaviour
         }
     }
 
+    private void IgnoreCollisionWithOtherCoffees()
+    {
+        BoxCollider collider = GetComponent<BoxCollider>();
+        GameObject[] coffees = GameObject.FindGameObjectsWithTag("Coffee");
+        for (int i = 0; i < coffees.Length; i++)
+        {
+            if (coffees[i].gameObject != gameObject)
+            {
+                BoxCollider otherCoffeesCollider = coffees[i].GetComponent<BoxCollider>();
+                Physics.IgnoreCollision(collider, otherCoffeesCollider);
+            }
+        }
+
+    }
+
     public void CalculateScore()
     {
-        FindObjectOfType<ScoreManager>().AddScore(coffeeAmount, isCoffeeHeat);
+        FindObjectOfType<ScoreManager>().AddScore(coffeeAmount, isCoffeeHeat, isCoffeeCreamed);
     }
 
 

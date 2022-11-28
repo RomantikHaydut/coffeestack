@@ -23,12 +23,10 @@ public class HandController : MonoBehaviour
         if (GameManager.Instance.isGameStarted)
         {
             RotateHand();
+            LastCoffee();
+
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            LevelFinishEvents();
-        }
     }
 
 
@@ -108,18 +106,13 @@ public class HandController : MonoBehaviour
 
     }
 
-    public void LevelFinishEvents()
+    // Level end events.
+    public void LevelFinish()
     {
-        for (int i = 0; i < CoffeeList.Count; i++)
-        {
-            CoffeeController coffee = CoffeeList[i].GetComponent<CoffeeController>();
-            if (coffee != null)
-            {
-                coffee.CalculateScore();
-            }
-        }
+        StartCoroutine(Camera.main.GetComponent<CameraController>().LevelFinish());
+        FindObjectOfType<MoveForward>().canMoveOnlyForward = true;
+        transform.parent.position = new Vector3(0, transform.position.y, transform.position.z);
 
-        print("Total Score : "+ FindObjectOfType<ScoreManager>().score);
     }
 
     private void OnDisable()

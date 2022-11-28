@@ -11,28 +11,7 @@ public class CoffeeFallController : MonoBehaviour
     {
         coffee = GameObject.FindGameObjectWithTag("Coffee");
         size = coffee.transform.localScale.z * coffee.GetComponent<BoxCollider>().size.z;
-        print("Size : " + size);
     }
-    /*private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Coffee"))
-        {
-            CoffeeController coffeeController = other.gameObject.GetComponent<CoffeeController>();
-            if (coffeeController != null)
-            {
-                if (coffeeController.coffeeAmount == 0)
-                {
-                    coffeeController.coffeeAmount = 1;
-                    coffeeController.FillCoffee();
-                }
-                else if (true)
-                {
-
-                }
-                
-            }
-        }
-    }*/
 
     private void OnTriggerEnter(Collider other)
     {
@@ -59,18 +38,30 @@ public class CoffeeFallController : MonoBehaviour
                 float takenDistance = coffeeController.distanceTakenWithCoffeeMachine;
                 if (takenDistance / (size * 2) <= 0.33f)
                 {
-                    coffeeController.coffeeAmount = 1;
-                    coffeeController.FillCoffee();
+                    if (coffeeController.coffeeAmount <= 1)
+                    {
+                        coffeeController.coffeeAmount = 1;
+                        coffeeController.FillCoffee();
+                    }
+                    
                 }
                 else if (takenDistance / (size * 2) > 0.33f && takenDistance / (size * 2) <= 0.66f)
                 {
-                    coffeeController.coffeeAmount = 2;
-                    coffeeController.FillCoffee();
+                    if (coffeeController.coffeeAmount <= 2)
+                    {
+                        coffeeController.coffeeAmount = 2;
+                        coffeeController.FillCoffee();
+                    }
+                    
                 }
                 else
                 {
-                    coffeeController.coffeeAmount = 3;
-                    coffeeController.FillCoffee();
+                    if (coffeeController.coffeeAmount <= 3)
+                    {
+                        coffeeController.coffeeAmount = 3;
+                        coffeeController.FillCoffee();
+                    }
+                    
                 }
 
             }

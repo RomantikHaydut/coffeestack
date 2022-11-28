@@ -8,13 +8,32 @@ public class CameraController : MonoBehaviour
 
     Transform target;
 
-    Vector3 offset;
+    float offset;
+
+    float finishOffset;
+
+    float angle;
+
+    float finishAngle;
+
+    float height;
+
+    float finishHeight;
+
+    bool islevelFinished;
 
     private void Awake()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        offset = target.position-transform.position;
+        offset = target.position.z - transform.position.z;
+        finishOffset = offset * 2;
+
+        angle = transform.eulerAngles.x;
+        finishAngle = angle + 15;
+
+        height = transform.position.y - GameObject.FindGameObjectWithTag("Ground").transform.position.y;
+        finishHeight = height * 2;
     }
     void LateUpdate()
     {
@@ -25,7 +44,20 @@ public class CameraController : MonoBehaviour
     {
         if (GameManager.Instance.isGameStarted)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y, target.position.z - offset.z);
+            if (islevelFinished)
+            {
+                height = Mathf.Lerp(height, finishHeight, Time.deltaTime);
+                offset = Mathf.Lerp(offset, finishOffset, Time.deltaTime);
+                angle = Mathf.Lerp(angle, finishAngle, Time.deltaTime);
+                transform.eulerAngles = new Vector3(angle, transform.eulerAngles.y, transform.eulerAngles.z);
+            }
+            transform.position = new Vector3(transform.position.x, height, target.position.z - offset);
         }
+    }
+
+    public IEnumerator LevelFinish()
+    {
+        islevelFinished = true;
+        yield break;
     }
 }
