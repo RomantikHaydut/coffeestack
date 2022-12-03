@@ -122,11 +122,13 @@ public class CustamorHandController : MonoBehaviour
         grabbedCoffee = true;
         targetCoffee.transform.parent = coffeePos.transform;
         targetCoffee.GetComponent<CoffeeController>().CalculateScore();
+        FindObjectOfType<MoveForward>().canMove = true;
         if (lastCoffee)
         {
             FindObjectOfType<UIManager>().DisplayScore();
+            GameManager.Instance.isLevelFinished = true;
         }
-        FindObjectOfType<MoveForward>().canMove = true;
+        
     }
 
 
@@ -137,19 +139,17 @@ public class CustamorHandController : MonoBehaviour
         while (true)
         {
             yield return null;
-            float distance = Vector3.Distance(coffeePos.transform.position, targetCoffee.transform.position);
-            targetCoffee.transform.position = Vector3.Lerp(targetCoffee.transform.position, coffeePos.transform.position, 10f * Time.deltaTime);
-            //if (distance > 0.05f)
-            //{
-            //    Vector3 dir = (coffeePos.transform.position - targetCoffee.transform.position).normalized;
-            //    targetCoffee.transform.position += dir;
-            //}
-            if (distance <= 0.01f)
+            if (targetCoffee != null)
             {
-                print("Distance is epsilon");
-                anim.SetTrigger("Grab");
-                yield break;
+                float distance = Vector3.Distance(coffeePos.transform.position, targetCoffee.transform.position);
+                targetCoffee.transform.position = Vector3.Lerp(targetCoffee.transform.position, coffeePos.transform.position, 10f * Time.deltaTime);
+                if (distance <= 0.01f)
+                {
+                    anim.SetTrigger("Grab");
+                    yield break;
+                }
             }
+                
         }
     }
 

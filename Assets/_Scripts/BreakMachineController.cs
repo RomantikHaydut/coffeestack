@@ -6,9 +6,31 @@ public class BreakMachineController : MonoBehaviour
 {
     [SerializeField] float xForce;
 
-    [SerializeField] GameObject trambolinePrefab;
+    // Scale values.
+
+    [SerializeField] float growSpeed;
+
+    private bool goingBigger;
+
+    private bool goingSmaller;
+
+    private float startSize;
+
+    private float goalSize;
 
     private bool collided = false;
+
+
+    private void Start()
+    {
+        startSize = transform.localScale.x;
+        goalSize = startSize * 2.5f;
+
+        goingBigger = true;
+        goingSmaller = false;
+
+        StartCoroutine(ChangeSize_Coroutine());
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -29,18 +51,6 @@ public class BreakMachineController : MonoBehaviour
         if (hand != null)
         {
             coffeeAmount = hand.CoffeeList.Count;
-
-            for (int i = 0; i < coffeeAmount; i++)
-            {
-                GameObject trambolineClone = Instantiate(trambolinePrefab, hand.CoffeeList[i].transform.position, Quaternion.identity);
-                TrambolineController trambolineController = trambolineClone.GetComponent<TrambolineController>();
-                if (trambolineController != null)
-                {
-                    trambolineController.target = hand.CoffeeList[i].gameObject;
-                }
-                Destroy(trambolineClone, 0.3f);
-            }
-
             BreakCoffees();
         }
 
@@ -48,29 +58,6 @@ public class BreakMachineController : MonoBehaviour
         
     }
 
-    /*void BreakCoffees()
-    {
-        HandController handController = FindObjectOfType<HandController>();
-        if (handController != null)
-        {
-            while (handController.CoffeeList.Count > 1)
-            {
-                for (int i = 1; i < handController.CoffeeList.Count; i++) // i = 1 because of we dont want to break first coffee.
-                {
-                    BonusCoffeeController bonusCoffeeController = handController.CoffeeList[i].gameObject.GetComponent<BonusCoffeeController>();
-                    if (bonusCoffeeController != null)
-                    {
-                        bonusCoffeeController.StopFollow();
-                        handController.CoffeeList.Remove(bonusCoffeeController.gameObject);
-                        break;
-                    }
-                }
-            }
-            CoffeeController coffeeController = FindObjectOfType<CoffeeController>();
-            coffeeController.SetLastCoffee();
-            print("Exit from while loop");
-        }
-    }*/
     void BreakCoffees()
     {
         HandController handController = FindObjectOfType<HandController>();
@@ -105,5 +92,32 @@ public class BreakMachineController : MonoBehaviour
         rb.useGravity = true;
         float randomForceX = Random.Range(-xForce, xForce);
         rb.AddForce((Vector3.forward * 6 * multiplier + Vector3.up * 5 + new Vector3(randomForceX,0,0)) , ForceMode.Impulse);
+    }
+
+    IEnumerator ChangeSize_Coroutine()
+    {
+        while (true)
+        {
+            yield return null;
+
+            if (goingBigger && !goingSmaller)
+            {
+                if (transform.localScale.x > goalSize)
+                {
+                    goingSmaller = true;
+                    goingBigger = false;
+                }
+                transform.localScale += new Vector3(transform.localScale.x, 0, transform.localScale.z) * growSpeed * Time.deltaTime;
+            }
+            else if (goingSmaller && !goingBigger)
+            {
+                if (transform.localScale.x < startSize)
+                {
+                    goingSmaller = false;
+                    goingBigger = true;
+                }
+                transform.localScale -= new Vector3(transform.localScale.x, 0, transform.localScale.z) * growSpeed * Time.deltaTime;
+            }
+        }
     }
 }

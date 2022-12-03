@@ -11,17 +11,15 @@ public class GameManager : MonoBehaviour
 
     public bool isGameStarted;
 
+    public bool isLevelFinished;
+
     private void Awake()
     {
         isGameStarted = false;
+        isLevelFinished = false;
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
         }
     }
 

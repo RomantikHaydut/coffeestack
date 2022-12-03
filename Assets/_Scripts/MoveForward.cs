@@ -32,7 +32,7 @@ public class MoveForward : MonoBehaviour
     }
     void Update()
     {
-        if (GameManager.Instance.isGameStarted)
+        if (GameManager.Instance.isGameStarted && !GameManager.Instance.isLevelFinished)
         {
             if (canMove)
             {

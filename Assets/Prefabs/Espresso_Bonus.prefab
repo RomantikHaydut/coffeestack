@@ -767,7 +767,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -4164,7 +4163,6 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
-    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -5593,7 +5591,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -8990,7 +8987,6 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
-    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -10419,7 +10415,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    gravitySource: 0
     maxNumParticles: 1000
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
@@ -13816,7 +13811,6 @@ ParticleSystem:
         m_RotationOrder: 4
     minVertexDistance: 0.2
     textureMode: 0
-    textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
     worldSpace: 0
@@ -14680,15 +14674,15 @@ Transform:
   m_Children:
   - {fileID: 3117471960743779245}
   - {fileID: 6140654217220727143}
-  - {fileID: 8223647104399320497}
   - {fileID: 290948207405810304}
   - {fileID: 5920243602118417164}
-  - {fileID: 5961117351125989545}
   - {fileID: 7806797589633535135}
   - {fileID: 6441707375233859954}
+  - {fileID: 8223647104399320497}
+  - {fileID: 5961117351125989545}
   - {fileID: 3640197617371786706}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7799913437606995677
 MeshFilter:
@@ -14781,6 +14775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de5dae9d19788f4d9ad160886e9747c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followCoffee: {fileID: 0}
   coffeeAmount: 0
   triggerWithCoffeeMachine: 0
   distanceTakenWithCoffeeMachine: 0
@@ -14891,13 +14886,12 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 7806477311447251021}
     m_Modifications:
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
@@ -14985,7 +14979,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e676218596e79d4a85acead1a9382a2, type: 3}
 --- !u!4 &3640197617371786706 stripped
 Transform:
@@ -14998,13 +14991,12 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 7806477311447251021}
     m_Modifications:
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
@@ -15092,7 +15084,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e676218596e79d4a85acead1a9382a2, type: 3}
 --- !u!4 &5961117351125989545 stripped
 Transform:
@@ -15105,13 +15096,12 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 7806477311447251021}
     m_Modifications:
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1277933041255557900, guid: 7e676218596e79d4a85acead1a9382a2,
         type: 3}
@@ -15199,7 +15189,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e676218596e79d4a85acead1a9382a2, type: 3}
 --- !u!4 &8223647104399320497 stripped
 Transform:

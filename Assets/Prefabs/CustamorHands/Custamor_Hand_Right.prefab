@@ -215,7 +215,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8465869328267526569, guid: dbc44f6b99a984be3b652ea5127614d9, type: 3}
+  - {fileID: 2100000, guid: 9b1dd93d1dcf53f4cb2ed171ff3e1edc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -505,7 +505,7 @@ Transform:
   - {fileID: 8832891461230529738}
   - {fileID: 8832891461939756568}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -180, y: -67.083984, z: 90}
 --- !u!95 &1627077715593187996
 Animator:
@@ -545,6 +545,7 @@ MonoBehaviour:
   endPoint: {fileID: 8832891462068135099}
   startPoint: {fileID: 8832891461230529737}
   takedCoffee: 0
+  lastCoffee: 0
   targetCoffee: {fileID: 0}
   coffeePos: {fileID: 8832891461939756567}
 --- !u!1 &6849164803291829074
@@ -799,7 +800,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4674846182438770023}
-  m_RootOrder: -1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8832891461939756567
 GameObject:
@@ -830,7 +831,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4674846182438770023}
-  m_RootOrder: -1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8832891462056343072
 GameObject:
@@ -864,7 +865,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4674846182438770023}
-  m_RootOrder: -1
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 110.201996, y: 0.2420044, z: 1.7169952}
 --- !u!33 &8832891462056343076
 MeshFilter:
@@ -894,7 +895,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5038a223ae8c628489f6fd9ebd6708f0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -959,7 +960,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4674846182438770023}
-  m_RootOrder: -1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8893074260041019296
 GameObject:

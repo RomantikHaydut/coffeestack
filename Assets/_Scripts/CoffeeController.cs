@@ -320,7 +320,7 @@ public class CoffeeController : MonoBehaviour
                         if (other.gameObject.CompareTag("FreeHand"))
                         {
 
-                            print("AAAAA");
+                           
                             FreeHandController freeHandController = other.gameObject.transform.GetComponentInParent(typeof(FreeHandController)) as FreeHandController;
                             if (!freeHandController.takedCoffee)
                             {
@@ -337,18 +337,19 @@ public class CoffeeController : MonoBehaviour
                         // Custamor hand it means custamor takes last coffee.
                         if (other.gameObject.CompareTag("CustamorHand"))
                         {
+                            print("First coffee triggered with custoamor");
                             CustamorHandController custamorHandController = other.gameObject.transform.GetComponentInParent(typeof(CustamorHandController)) as CustamorHandController;
                             if (!custamorHandController.takedCoffee)
                             {
+                                if (firstCoffee)
+                                {
+                                    custamorHandController.lastCoffee = true;
+                                }
                                 custamorHandController.targetCoffee = gameObject;
                                 StartCoroutine(custamorHandController.MoveCoffeeToHoldPosition());
                                 transform.tag = "TakenCoffee";
                                 custamorHandController.takedCoffee = true;
                                 RemoveFromCoffeeList();
-                                if (firstCoffee)
-                                {
-                                    custamorHandController.lastCoffee = true;
-                                }
                                 other.gameObject.tag = "Untagged";
                             }
                         }
