@@ -130,17 +130,16 @@ public class FreeHandController : MonoBehaviour
         while (true)
         {
             yield return null;
-            float distance = Vector3.Distance(coffeePos.transform.position, targetCoffee.transform.position);
-            targetCoffee.transform.position = Vector3.Lerp(targetCoffee.transform.position, coffeePos.transform.position, 5f * Time.deltaTime);
-            //if (distance > 0.05f)
-            //{
-            //    Vector3 dir = (coffeePos.transform.position - targetCoffee.transform.position).normalized;
-            //    targetCoffee.transform.position += dir;
-            //}
-            if (distance <= 0.01f)
+            if (targetCoffee != null)
             {
-                anim.SetTrigger("Grab");
-                yield break;
+                float distance = Vector3.Distance(coffeePos.transform.position, targetCoffee.transform.position);
+                targetCoffee.transform.position = Vector3.Lerp(targetCoffee.transform.position, coffeePos.transform.position, 5f * Time.deltaTime);
+
+                if (distance <= 0.01f)
+                {
+                    anim.SetTrigger("Grab");
+                    yield break;
+                }
             }
         }
     }

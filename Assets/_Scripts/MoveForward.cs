@@ -13,7 +13,7 @@ public class MoveForward : MonoBehaviour
     HandController hand;
 
     [SerializeField] GameObject ground;
-    [HideInInspector]public float boundry; // Grounds boundries.
+    [HideInInspector] public float boundry; // Grounds boundries.
     [SerializeField] float boundryOffset;
     private float sensitive; // Distance from camera.
     [SerializeField] [Range(1, 4)] float sensitiveMultiplier;
@@ -43,7 +43,7 @@ public class MoveForward : MonoBehaviour
                 else
                 {
                     transform.position += Vector3.forward * Time.deltaTime * speed;
-                }  
+                }
             }
             CoffeesMovement();
         }
@@ -70,15 +70,23 @@ public class MoveForward : MonoBehaviour
                 {
                     if (coffeeController.firstCoffee)
                     {
-                        coffeeController.FollowPlayer();
+                        if (coffeeController.gameObject.tag == "Coffee")
+                        {
+                            coffeeController.FollowPlayer();
+                        }
+
+
                     }
                     else
                     {
-                        coffeeController.FollowPreviousCoffee();
+                        if (coffeeController.gameObject.tag == "Coffee")
+                        {
+                            coffeeController.FollowPreviousCoffee();
+                        }
                     }
                 }
             }
-            
+
         }
     }
 }

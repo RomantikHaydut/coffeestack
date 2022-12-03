@@ -24,7 +24,7 @@ public class HandController : MonoBehaviour
         {
             RotateHand();
             LastCoffee();
-
+            FirstCoffee();
         }
 
     }

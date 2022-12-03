@@ -28,4 +28,9 @@ public class UIManager : MonoBehaviour
         int score = FindObjectOfType<ScoreManager>().score;
         scoreText.text = "Score : " + score;
     }
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
