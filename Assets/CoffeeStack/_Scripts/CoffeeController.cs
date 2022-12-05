@@ -271,7 +271,6 @@ public class CoffeeController : MonoBehaviour
                         {
                             if (following)
                             {
-                                print("AAAAA");
                                 FreeHandController freeHandController = other.gameObject.transform.GetComponentInParent(typeof(FreeHandController)) as FreeHandController;
                                 if (!freeHandController.takedCoffee)
                                 {
@@ -337,7 +336,6 @@ public class CoffeeController : MonoBehaviour
                         // Custamor hand it means custamor takes last coffee.
                         if (other.gameObject.CompareTag("CustamorHand"))
                         {
-                            print("First coffee triggered with custoamor");
                             CustamorHandController custamorHandController = other.gameObject.transform.GetComponentInParent(typeof(CustamorHandController)) as CustamorHandController;
                             if (!custamorHandController.takedCoffee)
                             {

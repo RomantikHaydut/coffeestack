@@ -125,7 +125,6 @@ public class CremaMachineController : MonoBehaviour
         {
             FindObjectOfType<MoveForward>().canMove = true;
             FindObjectOfType<MoveForward>().canMoveOnlyForward = false;
-            print("Crema ended.");
             anim.enabled = false;
             this.enabled = false;
             Destroy(gameObject);

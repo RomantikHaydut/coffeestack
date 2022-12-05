@@ -82,7 +82,6 @@ public class BreakMachineController : MonoBehaviour
             }
             handController.firstCoffee = null;
             handController.lastCoffee = null;
-            print("Exit from while loop");
         }
     }
 
